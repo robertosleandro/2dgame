@@ -5,18 +5,15 @@ using UnityEngine.UI;
 
 public class Player : Entity
 {
-    Animator anim;
+    public Animator anim;
     public float speed;
-    public Image currentSpellImage;
-    public Sprite spellSlot1Sprite;
-    public Sprite spellSlot2Sprite;
     public bool canTakeAction;
 
     public int maxHealth;
     public PlayerHealthBar healthbar;
 
-    Spellbook spellBook;
-    Spell currentSpell;
+    public Spellbook spellBook;
+    public Spell currentSpell;
 
     [SerializeField]
     Rigidbody2D rbody;
@@ -30,7 +27,7 @@ public class Player : Entity
         maxHealth = 500;
         health = maxHealth;
 
-        spellBook = new Spellbook(new List<string>(new string[] { "fireball", "gasball"}));
+        spellBook = new Spellbook(new List<string>(new string[] { "fireball", "gasball", "healball" }));
         currentSpell = spellBook.spells[0];      
     }
 
@@ -40,7 +37,7 @@ public class Player : Entity
         if (canTakeAction && Time.timeScale == 1f)
         {
             move();
-            getPlayerInput();
+           // getPlayerInput();
         }
     }
 
@@ -52,27 +49,7 @@ public class Player : Entity
         castSpell(currentSpell);
     }
 
-    void getPlayerInput()
-    {
-        if (Input.GetMouseButtonDown(0))
-        {
-            canTakeAction = false;
-            anim.SetBool("iscasting", true);
-            anim.SetBool("iswalking", false);
-        }
-
-        if (Input.GetKeyDown("1"))
-        {
-            currentSpellImage.sprite = spellSlot1Sprite;
-            currentSpell = spellBook.spells[0];
-        }
-
-        if (Input.GetKeyDown("2"))
-        {
-            currentSpellImage.sprite = spellSlot2Sprite;
-            currentSpell = spellBook.spells[1];
-        }
-    }
+   
 
     void castSpell(Spell spell)
     {
@@ -80,6 +57,7 @@ public class Player : Entity
         context.Add("targetTag", "Monster");
         context.Add("casterTag", "Player");
         context.Add("casterRbody", this.rbody);
+        context.Add("player", this);
     
         spell.execute(context);
     }
